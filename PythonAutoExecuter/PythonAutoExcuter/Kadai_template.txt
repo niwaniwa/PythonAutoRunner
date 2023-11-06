@@ -1,0 +1,7 @@
+﻿! KADAI
+!isEnded FALSE
+DataSourcePath: ....
+TemplatePath: template.py
+AnswerPath: answer.txt
+LibraryFile: <ここに必要なファイルを追加する>.csv
+Prefix: K3
