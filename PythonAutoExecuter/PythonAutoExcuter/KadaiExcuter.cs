@@ -178,7 +178,7 @@ namespace PythonAutoExecuter.PythonAutoExcuter
                 {
                     error = error.Replace(@"C:\Users\konya\Develop\Programs\PythonAutoExecuter\students_data\", @"C:\\..\");
                     Console.WriteLine($"Error executing {fileNumber}: {error}\n");
-                    File.WriteAllText(Path.Combine(outputDirectoryPath, $"{fileNumber}.txt"), $"正常に実行できませんでした。コードを確認してください。 {error}");
+                    File.WriteAllText(Path.Combine(outputDirectoryPath, $"{fileNumber}.txt"), $"正常に実行できませんでした。コードを確認してください。{Environment.NewLine} {error}");
                     results[fileNumber] = -1;
                     continue;
                 }
