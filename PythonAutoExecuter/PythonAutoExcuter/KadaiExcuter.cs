@@ -60,6 +60,8 @@ namespace PythonAutoExecuter.PythonAutoExcuter
             // 正規表現のパターン
             string pattern = @"^(?<index>\d+)_(?<id1>\d+)_(?<name>.+)_Q(?<qid>\d+)_(?<kadai>.+?)_(?<id3>\d+)$";
             
+            Console.WriteLine(": File initializing...");
+            
             foreach (var filePath in Directory.GetFiles(SourceDirectoryPath))
             {
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -75,15 +77,19 @@ namespace PythonAutoExecuter.PythonAutoExcuter
                         File.Delete(newFilePath);
                     }
                     File.Copy(filePath, newFilePath);
-                    Console.WriteLine($"Copied {filePath} to {newFilePath}");
 
                     modifyScript(newFilePath, FunctionCode);
                 }
             }
+            
+            Console.WriteLine(": File initialize completed.");
+            
         }
 
         private void CopyLibrary()
         {
+            if (!File.Exists(Library)) return;
+            if (File.Exists(Path.Combine(RunDirectoryPath, LibraryFileName))) return;
             File.Copy(Library, Path.Combine(RunDirectoryPath, LibraryFileName));
         }
 
@@ -137,7 +143,7 @@ namespace PythonAutoExecuter.PythonAutoExcuter
                 }
                 
                 int fileNumber = int.Parse(file.Split('_')[1]);
-                Console.WriteLine($"Executing {fileNumber}...");
+                Console.Write($"Executing {fileNumber}...");
 
                 var process = new Process
                 {
@@ -160,6 +166,7 @@ namespace PythonAutoExecuter.PythonAutoExcuter
                 
                 if (!process.WaitForExit(timeout))
                 {
+                    Console.WriteLine("     FAILED.");
                     // タイムアウト後にプロセスを強制終了
                     process.Kill();
                     Console.WriteLine($"Process was terminated due to a timeout of {timeout} milliseconds.");
@@ -176,6 +183,7 @@ namespace PythonAutoExecuter.PythonAutoExcuter
 
                 if (!string.IsNullOrEmpty(error))
                 {
+                    Console.WriteLine("     FAILED.");
                     error = error.Replace(@"C:\Users\konya\Develop\Programs\PythonAutoExecuter\students_data\", @"C:\\..\");
                     Console.WriteLine($"Error executing {fileNumber}: {error}\n");
                     File.WriteAllText(Path.Combine(outputDirectoryPath, $"{fileNumber}.txt"), $"正常に実行できませんでした。コードを確認してください。{Environment.NewLine} {error}");
@@ -185,8 +193,15 @@ namespace PythonAutoExecuter.PythonAutoExcuter
 
                 if (!isSuccess)
                 {
+                    Console.WriteLine("     FAILED.");
                     File.WriteAllText(Path.Combine(outputDirectoryPath, $"{fileNumber}.txt"), $"{output}");
                 }
+                else
+                {
+                    Console.WriteLine("     SUCCESS.");
+                }
+
+                completeDelegate.Run(isSuccess);
                 
                 
                 results[fileNumber] = isSuccess ? (CheckNameExist(filePath) ? 5 : 2) : 0;

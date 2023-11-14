@@ -31,7 +31,10 @@ namespace PythonAutoExecuter
                 Console.WriteLine("何もせずに終わりました... / already end files...");
                 return 0;
             }
+            
             var target = group[0];
+            
+            Console.WriteLine($"{target.Config["Prefix"]} loading...");
 
             var path =　target.Config["DataSourcePath"];
             var templatePath = Path.Combine(path, target.Config["TemplatePath"]);
@@ -62,7 +65,7 @@ namespace PythonAutoExecuter
                 
                 if (outputs.Length < answers.Length)
                 {
-                    // Console.WriteLine($"outputs.Length < answer.Length, {outputs.Length}: {answer.Length}");
+                    Console.WriteLine($"outputs.Length < answer.Length, {outputs.Length}: {answers.Length}");
                     return false;
                 }
 
@@ -70,7 +73,7 @@ namespace PythonAutoExecuter
                 {
                     if (answers[i].TrimEnd().TrimStart() != outputs[i].TrimEnd())
                     {
-                        // Console.WriteLine($"answers[i] != outputs[i] {answers[i]}:{outputs[i]}");
+                        Console.WriteLine($"   answers[i] != outputs[i] {answers[i]}:{outputs[i]}");
                         return false;
                     };
                 }
