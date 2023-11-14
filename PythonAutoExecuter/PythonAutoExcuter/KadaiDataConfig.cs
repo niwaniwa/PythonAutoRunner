@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace PythonAutoExecuter.PythonAutoExcuter
@@ -43,9 +44,9 @@ namespace PythonAutoExecuter.PythonAutoExcuter
             {
                 if (line2.StartsWith("!"))
                 {
-                    if (line1.Split()[0].TrimStart('!') == "isEnded")
+                    if (line2.Split()[0].TrimStart('!') == "isEnded")
                     {
-                        IsEnded = bool.Parse(line1.Split()[1]);
+                        IsEnded = bool.Parse(line2.Split()[1]);
                     }
                 }
                 return true;
